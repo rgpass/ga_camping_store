@@ -1,0 +1,35 @@
+<section class="container">
+
+  <!-- Main component for a primary marketing message or call to action -->
+  <div class="jumbotron">
+    <h2>Welcome to the <img width=76 height=76 src="/images/ga.png"/> Camping Store</h2>
+    <h4>We are just getting started but please check us out.</h4>
+  </div>
+
+  <!-- Static navbar -->
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button"
+                class="navbar-toggle collapsed"
+                data-toggle="collapse"
+                data-target="#navbar"
+                aria-expanded="false"
+                aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li <%= 'class="active"' if @active == 'home'  %>><a href="/">Home</a></li>
+          <li <%= 'class="active"' if @active == 'items' %>><a href="/items">Shop</a></li>
+          <li <%= 'class="active"' if @active == 'about' %>><a href="/about">About</a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+  </nav>
+
+</section>
