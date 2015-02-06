@@ -1,20 +1,6 @@
-class Item
-  attr_reader :id, :category, :name, :price
-  attr_reader :rating, :description, :image_file
-
-  def initialize(args)
-    @id          = args[:id]
-    @category    = args[:category]
-    @name        = args[:name]
-    @price       = args[:price]
-    @rating      = args[:rating]
-    @description = args[:description]
-    @image_file  = args[:image_file]
-  end
-
-  def to_s
-    "ID: #{@id}, Category: #{@category}, Name: #{@name}, " \
-    "Price: #{@price}, Description: #{@description}, " \
-    "Image File: #{@image_file}"
-  end
+class Item < ActiveRecord::Base
+  validates :name, presence: true, length: { minimum: 3, maximum: 254 }
+  # Same thing, different way
+  # validates :name, presence: true, length: { in: 3..254 }
+  validates :price, presence: true
 end
