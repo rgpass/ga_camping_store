@@ -4,6 +4,7 @@ describe 'item pages' do
   subject { page }
 
   describe 'index' do
+    Item.destroy_all
     let(:item1) { Item.create(name: '2-person tent', rating: 4.3,
                           price: 24.99, description: 'Cuddle time',
                           image_file: 'two_person_tent.png') }
@@ -14,8 +15,13 @@ describe 'item pages' do
     before { visit items_path }
 
     it { should have_title('Items Index') }
-    it { should have_selector('h1', text: 'All Items') } 
-    # it { should have_link('2-person tent', href: item_path(item1.id)) }
+    it { should have_selector('h1', text: 'All Items') }
+
+    it "lists each item" do
+      Item.all.each do |item|
+        expect(page).to have_selector('li', text: item.id)
+      end
+    end
   end
 
   describe 'show' do
