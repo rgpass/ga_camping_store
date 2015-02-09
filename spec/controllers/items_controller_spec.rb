@@ -41,4 +41,56 @@ describe ItemsController, type: :controller do
       expect(assigns(:item)).to eq(item1)
     end
   end
+
+  describe 'GET #new' do
+    it 'renders new' do
+      get :new
+      expect(response).to render_template(:new)
+    end
+
+    # Testing: @item == Item.new
+    it 'assigns a new Item' do
+      get :new
+      expect(assigns(:item)).to be_a_new(Item)
+    end
+  end
+
+  describe 'POST #create' do
+    context 'valid attributes' do
+      let(:valid_attributes) { { name: '2-person tent', rating: 4.3,
+                               price: 24.99, description: 'Blah blah',
+                               image_file: 'two_person_tent.png' } }
+# Why double bracket?
+# let(:item) { Item.new }
+# is like saying: item = Item.new
+# valid_attributes = { name: '' }
+# let(valid_attributes) { { name: '' } }
+
+      it 'create new item' do
+        expect{
+          post :create, item: valid_attributes
+        }.to change(Item, :count).by(1)
+      end
+
+      it 'redirect to items#index' do
+        post :create, item: valid_attributes
+        expect(response).to redirect_to(items_path)
+      end
+    end
+
+    context 'invalid attributes' do
+      let(:invalid_attributes) { { name: '' } }
+
+      it 'does not create new item' do
+        expect{
+          post :create, item: invalid_attributes
+        }.to_not change(Item, :count)
+      end
+
+      it 're-renders new' do
+        post :create, item: invalid_attributes
+        expect(response).to render_template(:new)
+      end
+    end
+  end
 end

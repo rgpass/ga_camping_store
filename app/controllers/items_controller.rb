@@ -20,4 +20,27 @@ class ItemsController < ApplicationController
     @active = 'items'
     @item   = Item.find(params[:id])
   end
+
+  def new
+    @active = 'items'
+    @item   = Item.new
+  end
+
+  def create
+    @item = Item.new(item_params)
+    # if @item is valid, it returns a truthy value
+    if @item.save
+      flash[:success] = "Item created."
+      redirect_to items_path
+    else
+      render 'new'
+    end
+  end
+
+  private
+
+    def item_params
+      params.require(:item).permit(:name, :rating, :price,
+                                   :description, :image_file)
+    end
 end
