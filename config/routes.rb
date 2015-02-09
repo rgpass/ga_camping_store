@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   # get '/', to: 'static_pages#home'
 
   get '/items',     to: 'items#index'
-  get '/items/:id', to: 'items#show'
+  # Visiting /items/2  aka seeing the details of the item with id == 2
+  get '/items/:id', to: 'items#show',         as: 'item'
   get '/about',     to: 'static_pages#about'
 end

@@ -13,6 +13,11 @@ describe 'static pages' do
   describe 'about page' do
     before { visit about_path }
 
+    # Doesn't check for an exact match
+    # Checks the title contains the given string
+    it { should have_title('About Me')}
+    # Real: My Camping Store | About Me
+    # This tests that the above contains the phrase 'About Me'
     it { should have_selector('h1', text: 'About Me') }
   end
 end
