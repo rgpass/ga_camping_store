@@ -55,16 +55,33 @@ describe ItemsController, type: :controller do
     end
   end
 
+  describe 'GET #edit' do
+    let(:item_for_edit) { Item.create(name: '2-person tent', rating: 4.3,
+                          price: 24.99, description: 'Cuddle time',
+                          image_file: 'two_person_tent.png') }
+    # Assume for discussion that item.id == 3
+    it 'renders edit' do
+      get :edit, id: item_for_edit.id # /items/3/edit
+      expect(response).to render_template(:edit) # loads the edit template
+    end
+
+    # Want to confirm @item = Item.find(3) when we go to /items/3/edit
+    it 'assigns correct item' do
+      get :edit, id: item_for_edit.id
+      expect(assigns(:item)).to eq(item_for_edit) # @item == item_for_edit (defined above)
+    end
+  end
+
   describe 'POST #create' do
     context 'valid attributes' do
       let(:valid_attributes) { { name: '2-person tent', rating: 4.3,
                                price: 24.99, description: 'Blah blah',
                                image_file: 'two_person_tent.png' } }
-# Why double bracket?
-# let(:item) { Item.new }
-# is like saying: item = Item.new
-# valid_attributes = { name: '' }
-# let(valid_attributes) { { name: '' } }
+      # Why double bracket?
+      # let(:item) { Item.new }
+      # is like saying: item = Item.new
+      # valid_attributes = { name: '' }
+      # let(valid_attributes) { { name: '' } }
 
       it 'create new item' do
         expect{
@@ -72,7 +89,7 @@ describe ItemsController, type: :controller do
         }.to change(Item, :count).by(1)
       end
 
-      it 'redirect to items#index' do
+      it 'redirects to items#index' do
         post :create, item: valid_attributes
         expect(response).to redirect_to(items_path)
       end
@@ -91,6 +108,58 @@ describe ItemsController, type: :controller do
         post :create, item: invalid_attributes
         expect(response).to render_template(:new)
       end
+    end
+  end
+
+  describe 'PATCH #update' do
+    let(:item_for_edit) { Item.create(name: '2-person sleeping_bag', rating: 4.3,
+                          price: 24.99, description: 'Cuddle time',
+                          image_file: 'two_person_tent.png') }
+    context 'valid attributes' do
+      it 'updates item' do
+        patch :update, id: item_for_edit.id, item: { name: '3-person sleeping_bag' }
+        item_for_edit.reload
+        expect(item_for_edit.name).to eq('3-person sleeping_bag')
+        # If we were using instance variable for item, could do the following:
+        # expect(assigns(:item).name).to eq('3-person sleeping_bag')
+      end
+
+      it 'redirects to items#show' do
+        patch :update, id: item_for_edit.id, item: { name: '3-person sleeping_bag' }
+        expect(response).to redirect_to(item_path(item_for_edit.id)) # item#show
+      end
+    end
+
+    context 'invalid attributes' do
+      it 'does not update item' do
+        patch :update, id: item_for_edit.id, item: { name: '' }
+        item_for_edit.reload
+        expect(item_for_edit.name).to eq('2-person sleeping_bag') # aka what we started with
+      end
+
+      it 're-renders edit' do
+        patch :update, id: item_for_edit.id, item: { name: '' }
+        expect(response).to render_template(:edit)
+      end
+    end
+  end
+
+  describe 'DELETE #destroy' do
+    it 'deletes requested item' do
+      item_for_removal = Item.create(name: '2-person sleeping_bag', rating: 4.3,
+                          price: 24.99, description: 'Cuddle time',
+                          image_file: 'two_person_tent.png')
+      expect{
+        delete :destroy, id: item_for_removal.id
+      }.to change(Item, :count).by(-1)
+    end
+
+    it 'redirects to index' do
+      item_for_removal = Item.create(name: '2-person sleeping_bag', rating: 4.3,
+                          price: 24.99, description: 'Cuddle time',
+                          image_file: 'two_person_tent.png')
+      delete :destroy, id: item_for_removal.id
+      expect(response).to redirect_to(items_path)
     end
   end
 end

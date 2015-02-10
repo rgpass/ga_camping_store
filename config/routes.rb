@@ -9,6 +9,6 @@ Rails.application.routes.draw do
   # # Visiting /items/2  aka seeing the details of the item with id == 2
   # get '/items/:id', to: 'items#show',         as: 'item'
   # resources :items, only: [:index, :show, :new, :create]
-  resources :items,  except: [:edit, :update, :destroy]
+  resources :items
   get '/about',     to: 'static_pages#about'
 end

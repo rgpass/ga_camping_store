@@ -1,15 +1,3 @@
-# class ItemsController < ApplicationController
-#   def index
-#     @active = 'items'
-#     @items = Inventory.all
-#   end
-
-#   def show
-#     @active = 'items'
-#     @item   = Inventory.find(params[:id].to_i)
-#   end
-# end
-
 class ItemsController < ApplicationController
   def index
     @active = 'items'
@@ -27,6 +15,7 @@ class ItemsController < ApplicationController
   end
 
   def create
+    @active = 'items'
     @item = Item.new(item_params)
     # if @item is valid, it returns a truthy value
     if @item.save
@@ -35,6 +24,28 @@ class ItemsController < ApplicationController
     else
       render 'new'
     end
+  end
+
+  def edit
+    @active = 'items'
+    @item = Item.find(params[:id])
+  end
+
+  def update
+    @item = Item.find(params[:id])
+    if @item.update_attributes(item_params)
+      flash[:success] = "Item updated."
+      redirect_to item_path(@item.id)
+    else
+      render 'edit'
+    end
+  end
+
+  def destroy
+    @item = Item.find(params[:id])
+    @item.destroy
+    flash[:success] = "Item deleted."
+    redirect_to items_path
   end
 
   private
