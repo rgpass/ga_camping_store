@@ -10,5 +10,12 @@ Rails.application.routes.draw do
   # get '/items/:id', to: 'items#show',         as: 'item'
   # resources :items, only: [:index, :show, :new, :create]
   resources :items
+  resources :users,     except: [:new]
+  resources :sessions,  only:   [:create]
+
   get '/about',     to: 'static_pages#about'
+
+  get '/signup',    to: 'users#new'
+  get '/signin',    to: 'sessions#new'
+  delete '/signout',   to: 'sessions#destroy'
 end
