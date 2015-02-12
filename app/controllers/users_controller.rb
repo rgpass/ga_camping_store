@@ -1,4 +1,9 @@
 class UsersController < ApplicationController
+  before_action :signed_in_user,  only: [:edit, :update, :destroy]
+  before_action :correct_user,    only: [:edit, :update, :destroy]
+  before_action :redirect_if_signed_in, only: [:new, :create]
+  before_action :admin_user,      only: [:destroy]
+
   def new
     @user = User.new
   end
@@ -50,4 +55,12 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
+
+    def correct_user
+      # If my user.id == 1, I try to go to users/2/edit
+      @user = User.find(params[:id]) # @user == User.find(2) == Marc's profile
+      # Redirect back to /users/1 unless 1 == 2
+      redirect_to(user_path(current_user)) unless current_user?(@user)
+    end
+
 end

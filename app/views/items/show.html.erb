@@ -1,2 +1,4 @@
 <% provide(:title, @item.name) %>
 <h1><%= @item.name %></h1>
+
+<h6>Owner: <%= link_to @item.user.name, user_path(@item.user) %></h6>

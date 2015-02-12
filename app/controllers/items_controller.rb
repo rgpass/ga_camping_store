@@ -1,4 +1,8 @@
 class ItemsController < ApplicationController
+  before_action :set_item, only: [:show, :edit, :update, :destroy]
+  before_action :signed_in_user, except: [:index, :show]
+  before_action :correct_user,   except: [:new, :create, :index, :show]
+
   def index
     @active = 'items'
     @items  = Item.all
@@ -6,7 +10,6 @@ class ItemsController < ApplicationController
 
   def show
     @active = 'items'
-    @item   = Item.find(params[:id])
   end
 
   def new
@@ -16,7 +19,8 @@ class ItemsController < ApplicationController
 
   def create
     @active = 'items'
-    @item = Item.new(item_params)
+    # @item = Item.new(item_params)
+    @item = current_user.items.new(item_params) # automagically sets user_id: current_user.id
     # if @item is valid, it returns a truthy value
     if @item.save
       flash[:success] = "Item created."
@@ -28,11 +32,9 @@ class ItemsController < ApplicationController
 
   def edit
     @active = 'items'
-    @item = Item.find(params[:id])
   end
 
   def update
-    @item = Item.find(params[:id])
     if @item.update_attributes(item_params)
       flash[:success] = "Item updated."
       redirect_to item_path(@item.id)
@@ -42,7 +44,6 @@ class ItemsController < ApplicationController
   end
 
   def destroy
-    @item = Item.find(params[:id])
     @item.destroy
     flash[:success] = "Item deleted."
     redirect_to items_path
@@ -54,4 +55,15 @@ class ItemsController < ApplicationController
       params.require(:item).permit(:name, :rating, :price,
                                    :description, :image_file)
     end
+
+    def set_item
+      @item = Item.find(params[:id])
+    end
+
+    def correct_user
+      unless current_user?(@item.user) || current_user.admin?
+        redirect_to user_path(current_user)
+      end
+    end
+    
 end

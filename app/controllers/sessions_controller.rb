@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  before_action :redirect_if_signed_in, except: [:destroy]
+
   def new
   end
 
@@ -8,7 +10,7 @@ class SessionsController < ApplicationController
       sign_in user
       redirect_to user_path user
     else
-      flash[:danger] = "Invalid email/password combination"
+      flash.now[:danger] = "Invalid email/password combination"
       render 'new'
     end
   end
@@ -17,4 +19,5 @@ class SessionsController < ApplicationController
     sign_out
     redirect_to root_path
   end
+
 end
