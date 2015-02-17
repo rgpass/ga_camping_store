@@ -5,10 +5,8 @@ describe 'user pages' do
 
   describe 'index' do
     User.destroy_all
-    let(:user1) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                        password: "foobar", password_confirmation: "foobar") }
-    let(:user2) { User.create(name: "Marcus Aurelius", email: "marcus@gmail.com",
-                        password: "foobar", password_confirmation: "foobar") }
+    let(:user1) { FactoryGirl.create(:user) }
+    let(:user2) { FactoryGirl.create(:user) }
 
     before { visit users_path }
 
@@ -24,12 +22,9 @@ describe 'user pages' do
     # <a href="http://www.google.com">Google's Homepage</a>
 
     describe 'delete links' do
-      let!(:user1) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
-      let!(:user2) { User.create(name: "Marcus Aurelius", email: "marcus@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
-      let(:admin)  { User.create(name: "Mike Hopper", email: "mike@gmail.com",
-                          password: "foobar", password_confirmation: "foobar", admin: true) }
+      let!(:user1) { FactoryGirl.create(:user) }
+      let!(:user2) { FactoryGirl.create(:user) }
+      let(:admin) { FactoryGirl.create(:admin) }
       # visit the index -- done above already
       # click delete link
       before do
@@ -53,8 +48,7 @@ describe 'user pages' do
   end
 
   describe 'show' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                        password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
 
     before { visit user_path(user.id) }
 
@@ -114,9 +108,7 @@ describe 'user pages' do
   end
 
   describe 'edit user page' do
-    let(:user_for_edit) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                        password: "foobar", password_confirmation: "foobar") }
-
+    let(:user_for_edit) { FactoryGirl.create(:user) }
     before do
       sign_in user_for_edit
       visit edit_user_path(user_for_edit.id)

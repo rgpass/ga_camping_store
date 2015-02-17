@@ -4,12 +4,8 @@ describe ItemsController, type: :controller do
   # Sometimes need to do this to have RSpec work correctly
   # Item.destroy_all
   # Pre-populating fake data for our tests later
-  let(:item1) { Item.create(name: '2-person tent', rating: 4.3,
-                        price: 24.99, description: 'Cuddle time',
-                        image_file: 'two_person_tent.png') }
-  let(:item2) { Item.create(name: 'Sleeping bag', rating: 4.3,
-                        price: 24.99, description: 'Human burrito',
-                        image_file: 'sleeping_bag.png') }
+  let(:item1) { FactoryGirl.create(:item) }
+  let(:item2) { FactoryGirl.create(:item) }
 
   describe 'GET #index' do
     it 'renders index' do # loads the page
@@ -43,8 +39,7 @@ describe ItemsController, type: :controller do
   end
 
   describe 'GET #new' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
     before { sign_in user, no_capybara: true }
 
     it 'renders new' do
@@ -117,13 +112,11 @@ describe ItemsController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
     before { sign_in user, no_capybara: true }
 
-    let(:item_for_edit) { Item.create(name: '2-person sleeping_bag', rating: 4.3,
-                          price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png', user_id: user.id) }
+    let(:item_for_edit) { FactoryGirl.create(:item, name: '2-person sleeping_bag', user: user) }
+
     context 'valid attributes' do
       it 'updates item' do
         patch :update, id: item_for_edit.id, item: { name: '3-person sleeping_bag' }
@@ -154,23 +147,18 @@ describe ItemsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
     before { sign_in user, no_capybara: true }
 
     it 'deletes requested item' do
-      item_for_removal = Item.create(name: '2-person sleeping_bag', rating: 4.3,
-                          price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png', user_id: user.id)
+      item_for_removal = FactoryGirl.create(:item, user_id: user.id)
       expect{
         delete :destroy, id: item_for_removal.id
       }.to change(Item, :count).by(-1)
     end
 
     it 'redirects to index' do
-      item_for_removal = Item.create(name: '2-person sleeping_bag', rating: 4.3,
-                          price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png', user_id: user.id)
+      item_for_removal = FactoryGirl.create(:item, user_id: user.id)
       delete :destroy, id: item_for_removal.id
       expect(response).to redirect_to(items_path)
     end

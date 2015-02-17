@@ -136,9 +136,7 @@ describe UsersController, type: :controller do
     # end
 
     it 'redirects to index' do
-      user_for_removal = User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar")
-
+      user_for_removal = FactoryGirl.create(:user)
       sign_in user_for_removal, no_capybara: true
 
       delete :destroy, id: user_for_removal.id

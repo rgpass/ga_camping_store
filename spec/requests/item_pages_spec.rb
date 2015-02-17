@@ -4,15 +4,10 @@ describe 'item pages' do
   subject { page }
 
   describe 'index' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                        password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
     Item.destroy_all
-    let(:item1) { Item.create(name: '2-person tent', rating: 4.3,
-                          price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png', user_id: user.id) }
-    let(:item2) { Item.create(name: 'Sleeping bag', rating: 4.3,
-                          price: 24.99, description: 'Human burrito',
-                          image_file: 'sleeping_bag.png', user_id: user.id) }
+    let(:item1) { FactoryGirl.create(:item) }
+    let(:item2) { FactoryGirl.create(:item) }
 
     before { visit items_path }
 
@@ -28,12 +23,8 @@ describe 'item pages' do
     # <a href="http://www.google.com">Google's Homepage</a>
 
     describe 'delete links' do
-      let!(:item1) { Item.create(name: '2-person tent', rating: 4.3,
-                            price: 24.99, description: 'Cuddle time',
-                            image_file: 'two_person_tent.png') }
-      let!(:item2) { Item.create(name: 'Sleeping bag', rating: 4.3,
-                            price: 24.99, description: 'Human burrito',
-                            image_file: 'sleeping_bag.png') }
+      let!(:item1) { FactoryGirl.create(:item) }
+      let!(:item2) { FactoryGirl.create(:item) }
       # visit the index -- done above already
       # click delete link
       before { visit items_path }
@@ -53,11 +44,8 @@ describe 'item pages' do
   end
 
   describe 'show' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                        password: "foobar", password_confirmation: "foobar") }
-    let(:item) { Item.create(name: '2-person tent', rating: 4.3,
-                          price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png', user_id: user.id) }
+    let(:user) { FactoryGirl.create(:user) }
+    let(:item) { FactoryGirl.create(:item, user: user) }
 
     before { visit item_path(item.id) }
 
@@ -66,8 +54,8 @@ describe 'item pages' do
   end
 
   describe 'new item page' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                        password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
+
     before do
       sign_in user
       visit new_item_path
@@ -120,11 +108,8 @@ describe 'item pages' do
   end
 
   describe 'edit item page' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                        password: "foobar", password_confirmation: "foobar") }
-    let(:item_for_edit) { Item.create(name: '2-person sleeping_bag', rating: 4.3,
-                          price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png', user_id: user.id) }
+    let(:user) { FactoryGirl.create(:user) }
+    let(:item_for_edit) { FactoryGirl.create(:item, user: user) }
 
     before do
       sign_in user

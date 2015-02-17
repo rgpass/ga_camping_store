@@ -9,8 +9,7 @@ describe SessionsController, type: :controller do
   end
 
   describe 'POST #create' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
 
     context 'valid information' do
       it 'signs in user' do
@@ -38,8 +37,7 @@ describe SessionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
     before { sign_in(user, no_capybara: true) }
 
     it 'destroys requested session' do

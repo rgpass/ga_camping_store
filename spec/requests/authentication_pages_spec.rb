@@ -10,14 +10,11 @@ describe "Authentication" do
     it { should have_content('Sign In') }
 
     describe 'signin process' do
-      let(:submit) { 'Sign In' }
-      let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                            password: "foobar", password_confirmation: "foobar") }
+      let(:user) { FactoryGirl.create(:user) }
       context 'valid information' do
         before { sign_in user }
 
         it { should have_title(user.name) }
-
       end
 
       context 'invalid information' do
