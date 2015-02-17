@@ -60,13 +60,10 @@ describe ItemsController, type: :controller do
   end
 
   describe 'GET #edit' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
     before { sign_in user, no_capybara: true }
 
-    let(:item_for_edit) { Item.create(name: '2-person tent', rating: 4.3,
-                          price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png', user_id: user.id) }
+    let(:item_for_edit) { FactoryGirl.create(:item, user_id: user.id) }
     # Assume for discussion that item.id == 3
     it 'renders edit' do
       get :edit, id: item_for_edit.id # /items/3/edit
@@ -81,14 +78,10 @@ describe ItemsController, type: :controller do
   end
 
   describe 'POST #create' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
     before { sign_in user, no_capybara: true }
 
     context 'valid attributes' do
-      let(:valid_attributes) { { name: '2-person tent', rating: 4.3,
-                               price: 24.99, description: 'Blah blah',
-                               image_file: 'two_person_tent.png', user_id: user.id } }
       # Why double bracket?
       # let(:item) { Item.new }
       # is like saying: item = Item.new
@@ -97,12 +90,12 @@ describe ItemsController, type: :controller do
 
       it 'create new item' do
         expect{
-          post :create, item: valid_attributes
+          post :create, item: FactoryGirl.attributes_for(:item, user_id: user.id)
         }.to change(Item, :count).by(1)
       end
 
       it 'redirects to items#index' do
-        post :create, item: valid_attributes
+        post :create, item: FactoryGirl.attributes_for(:item, user_id: user.id)
         expect(response).to redirect_to(items_path)
       end
     end

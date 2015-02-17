@@ -16,17 +16,14 @@ describe UsersController, type: :controller do
 
   describe 'POST #create' do
     context 'valid attributes' do
-      let(:valid_attributes) { { name: "Gerry Pass", email: "rgpass@gmail.com",
-                        password: "foobar", password_confirmation: "foobar" } }
-
       it 'create new user' do
         expect{
-          post :create, user: valid_attributes
+          post :create, user: FactoryGirl.attributes_for(:user)
         }.to change(User, :count).by(1)
       end
 
       it 'redirects to users#show' do
-        post :create, user: valid_attributes
+        post :create, user: FactoryGirl.attributes_for(:user)
         expect(response).to redirect_to(user_path(User.last.id))
       end
     end
@@ -48,8 +45,7 @@ describe UsersController, type: :controller do
   end
 
   describe 'GET #show' do
-    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user) { FactoryGirl.create(:user) }
 
     it 'renders show' do
       get :show, id: user.id
@@ -63,29 +59,23 @@ describe UsersController, type: :controller do
   end
 
   describe 'GET #index' do
-    let(:user1) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
-    let(:user2) { User.create(name: "Marcus Wright", email: "marcus.wright@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user1) { FactoryGirl.create(:user) }
+    let(:user2) { FactoryGirl.create(:user) }
 
     it 'renders index' do 
       get :index
       expect(response).to render_template(:index)
     end
 
-    
-    
     it 'populate an array of users' do
       get :index
-      
       
       expect(assigns(:users)).to eq([user1, user2])
     end
   end
 
   describe 'GET #edit' do
-    let(:user_for_edit) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user_for_edit) { FactoryGirl.create(:user) }
 
     before { sign_in user_for_edit, no_capybara: true }
     
@@ -102,8 +92,7 @@ describe UsersController, type: :controller do
   end
 
   describe 'PATCH #update' do
-    let(:user_for_edit) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
-                          password: "foobar", password_confirmation: "foobar") }
+    let(:user_for_edit) { FactoryGirl.create(:user, name: "Gerry Pass") }
 
     before { sign_in user_for_edit, no_capybara: true }
 
