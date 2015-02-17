@@ -4,13 +4,15 @@ describe 'item pages' do
   subject { page }
 
   describe 'index' do
+    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
+                        password: "foobar", password_confirmation: "foobar") }
     Item.destroy_all
     let(:item1) { Item.create(name: '2-person tent', rating: 4.3,
                           price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png') }
+                          image_file: 'two_person_tent.png', user_id: user.id) }
     let(:item2) { Item.create(name: 'Sleeping bag', rating: 4.3,
                           price: 24.99, description: 'Human burrito',
-                          image_file: 'sleeping_bag.png') }
+                          image_file: 'sleeping_bag.png', user_id: user.id) }
 
     before { visit items_path }
 
@@ -51,9 +53,11 @@ describe 'item pages' do
   end
 
   describe 'show' do
+    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
+                        password: "foobar", password_confirmation: "foobar") }
     let(:item) { Item.create(name: '2-person tent', rating: 4.3,
                           price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png') }
+                          image_file: 'two_person_tent.png', user_id: user.id) }
 
     before { visit item_path(item.id) }
 
@@ -62,7 +66,12 @@ describe 'item pages' do
   end
 
   describe 'new item page' do
-    before { visit new_item_path }
+    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
+                        password: "foobar", password_confirmation: "foobar") }
+    before do
+      sign_in user
+      visit new_item_path
+    end
 
     it { should have_title('Add Item') }
     it { should have_selector('h1', 'Add Item') }
@@ -111,11 +120,16 @@ describe 'item pages' do
   end
 
   describe 'edit item page' do
+    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
+                        password: "foobar", password_confirmation: "foobar") }
     let(:item_for_edit) { Item.create(name: '2-person sleeping_bag', rating: 4.3,
                           price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png') }
+                          image_file: 'two_person_tent.png', user_id: user.id) }
 
-    before { visit edit_item_path(item_for_edit.id) }
+    before do
+      sign_in user
+      visit edit_item_path(item_for_edit.id)
+    end
 
     it { should have_title('Edit Item') }
     it { should have_selector('h1', 'Edit Item') }

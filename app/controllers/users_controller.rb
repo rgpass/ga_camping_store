@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :signed_in_user,  only: [:edit, :update, :destroy]
-  before_action :correct_user,    only: [:edit, :update, :destroy]
+  before_action :correct_user,    only: [:edit, :update]
   before_action :redirect_if_signed_in, only: [:new, :create]
   before_action :admin_user,      only: [:destroy]
 
@@ -47,7 +47,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.destroy
     flash[:success] = "User terminated."
-    redirect_to users_path
+    redirect_to root_path
   end
   
   private
@@ -60,7 +60,7 @@ class UsersController < ApplicationController
       # If my user.id == 1, I try to go to users/2/edit
       @user = User.find(params[:id]) # @user == User.find(2) == Marc's profile
       # Redirect back to /users/1 unless 1 == 2
-      redirect_to(user_path(current_user)) unless current_user?(@user)
+      redirect_to(root_path) unless current_user?(@user)
     end
 
 end

@@ -28,9 +28,15 @@ describe 'user pages' do
                           password: "foobar", password_confirmation: "foobar") }
       let!(:user2) { User.create(name: "Marcus Aurelius", email: "marcus@gmail.com",
                           password: "foobar", password_confirmation: "foobar") }
+      let(:admin)  { User.create(name: "Mike Hopper", email: "mike@gmail.com",
+                          password: "foobar", password_confirmation: "foobar", admin: true) }
       # visit the index -- done above already
       # click delete link
-      before { visit users_path }
+      before do
+        sign_in admin
+        visit users_path
+      end
+
       it { should have_link('delete', href: user_path(User.first)) }
       # it 'deletes that user' do
       #   expect {
@@ -111,7 +117,10 @@ describe 'user pages' do
     let(:user_for_edit) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
                         password: "foobar", password_confirmation: "foobar") }
 
-    before { visit edit_user_path(user_for_edit.id) }
+    before do
+      sign_in user_for_edit
+      visit edit_user_path(user_for_edit.id)
+    end
 
     it { should have_title('Edit Profile') }
     it { should have_selector('h1', 'Edit Profile') }

@@ -43,6 +43,10 @@ describe ItemsController, type: :controller do
   end
 
   describe 'GET #new' do
+    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
+                          password: "foobar", password_confirmation: "foobar") }
+    before { sign_in user, no_capybara: true }
+
     it 'renders new' do
       get :new
       expect(response).to render_template(:new)
@@ -56,9 +60,13 @@ describe ItemsController, type: :controller do
   end
 
   describe 'GET #edit' do
+    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
+                          password: "foobar", password_confirmation: "foobar") }
+    before { sign_in user, no_capybara: true }
+
     let(:item_for_edit) { Item.create(name: '2-person tent', rating: 4.3,
                           price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png') }
+                          image_file: 'two_person_tent.png', user_id: user.id) }
     # Assume for discussion that item.id == 3
     it 'renders edit' do
       get :edit, id: item_for_edit.id # /items/3/edit
@@ -73,10 +81,14 @@ describe ItemsController, type: :controller do
   end
 
   describe 'POST #create' do
+    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
+                          password: "foobar", password_confirmation: "foobar") }
+    before { sign_in user, no_capybara: true }
+
     context 'valid attributes' do
       let(:valid_attributes) { { name: '2-person tent', rating: 4.3,
                                price: 24.99, description: 'Blah blah',
-                               image_file: 'two_person_tent.png' } }
+                               image_file: 'two_person_tent.png', user_id: user.id } }
       # Why double bracket?
       # let(:item) { Item.new }
       # is like saying: item = Item.new
@@ -112,9 +124,13 @@ describe ItemsController, type: :controller do
   end
 
   describe 'PATCH #update' do
+    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
+                          password: "foobar", password_confirmation: "foobar") }
+    before { sign_in user, no_capybara: true }
+
     let(:item_for_edit) { Item.create(name: '2-person sleeping_bag', rating: 4.3,
                           price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png') }
+                          image_file: 'two_person_tent.png', user_id: user.id) }
     context 'valid attributes' do
       it 'updates item' do
         patch :update, id: item_for_edit.id, item: { name: '3-person sleeping_bag' }
@@ -145,10 +161,14 @@ describe ItemsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    let(:user) { User.create(name: "Gerry Pass", email: "rgpass@gmail.com",
+                          password: "foobar", password_confirmation: "foobar") }
+    before { sign_in user, no_capybara: true }
+
     it 'deletes requested item' do
       item_for_removal = Item.create(name: '2-person sleeping_bag', rating: 4.3,
                           price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png')
+                          image_file: 'two_person_tent.png', user_id: user.id)
       expect{
         delete :destroy, id: item_for_removal.id
       }.to change(Item, :count).by(-1)
@@ -157,7 +177,7 @@ describe ItemsController, type: :controller do
     it 'redirects to index' do
       item_for_removal = Item.create(name: '2-person sleeping_bag', rating: 4.3,
                           price: 24.99, description: 'Cuddle time',
-                          image_file: 'two_person_tent.png')
+                          image_file: 'two_person_tent.png', user_id: user.id)
       delete :destroy, id: item_for_removal.id
       expect(response).to redirect_to(items_path)
     end
